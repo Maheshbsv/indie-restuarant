@@ -1,8 +1,10 @@
 <div class="container" fxLayout="column" fxLayoutGap="10px">
     
     <div fxFlex>
+        <h2>Menu</h2>
         <mat-grid-list cols="2" rowHeight="200px" gutterSize="20px">
-            <mat-grid-tile *ngFor="let dish of dishes">
+            
+            <mat-grid-tile *ngFor="let dish of dishes" (click)="onSelect(dish)">
                 <img height="100px" src="{{dish.image}}" alt="{{dish.name}}">
                 <mat-grid-tile-header>
                     <h1> {{dish.name | uppercase}}</h1>
@@ -14,5 +16,5 @@
         </mat-grid-list>
     </div>
 
-
+<app-dishdetail [dish] = "selectedDish"></app-dishdetail>
 </div>
