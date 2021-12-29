@@ -1,7 +1,7 @@
-import { iLeader } from "./iLeader";
+import { Leader } from "./leader";
 
 
-export const LEADERS: iLeader[] = [
+export const LEADERS: Leader[] = [
     {
         id: '0',
         name: 'Peter Pan',

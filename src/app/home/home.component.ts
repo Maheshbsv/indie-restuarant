@@ -4,7 +4,7 @@ import { PromotionService } from '../services/promotion.service';
 import { Dish } from '../shared/dish';
 import { Promotion } from '../shared/promotion';
 import { LeaderService } from '../services/leader.service';
-import { iLeader } from '../shared/iLeader'
+import { Leader } from '../shared/leader'
 
 
 
@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
 
   dish!: Dish;
   promotion!: Promotion;
-  leader!: iLeader;
+  leader!: Leader;
 
   constructor(private dishService: DishService,
     private promotionService: PromotionService,

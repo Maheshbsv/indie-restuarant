@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { iLeader } from '../shared/iLeader';
+import { Leader } from '../shared/leader';
 import { LEADERS } from '../shared/leaders';
 
 @Component({
@@ -9,7 +9,7 @@ import { LEADERS } from '../shared/leaders';
 })
 export class AboutComponent implements OnInit {
 
-  leaders: iLeader[] = LEADERS;
+  leaders: Leader[] = LEADERS;
 
   constructor() { }
 
