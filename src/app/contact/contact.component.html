@@ -42,9 +42,11 @@
       <p>
         <mat-form-field class="half-width">
           <input matInput formControlName="firstname" placeholder="First Name" type="text" required>
+          <mat-error *ngIf="feedbackForm.get('firstname')">First name is required</mat-error>
         </mat-form-field>
         <mat-form-field class="half-width">
           <input matInput formControlName="lastname" placeholder="Last Name" type="text" required>
+          <mat-error *ngIf="feedbackForm.get('lastname')">Last name is required</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -53,6 +55,7 @@
         </mat-form-field>
         <mat-form-field class="half-width">
           <input matInput formControlName="email" placeholder="Email" type="email" required>
+          <mat-error *ngIf="feedbackForm.get('email')">email is required</mat-error>
         </mat-form-field>
       </p>
       <table class="form-size">
