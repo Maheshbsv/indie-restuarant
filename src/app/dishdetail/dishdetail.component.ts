@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { DishService } from '../services/dish.service';
 import { Dish } from "../shared/dish"
@@ -19,11 +19,13 @@ export class DishdetailComponent implements OnInit {
   next!: string;
   commentsForm!: FormGroup;
   comment!: Comment;
+  errorMessage!: string;
 
   constructor(private dishService: DishService,
     private route: ActivatedRoute,
     private location: Location,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    @Inject('BaseURL') public BaseURL: string) {
     this.commentsForm = this.fb.group({
       "author": ["", [Validators.required, Validators.minLength(2)]],
       "rating": 5,
@@ -31,7 +33,10 @@ export class DishdetailComponent implements OnInit {
     });
 
     this.commentsForm.valueChanges
-      .subscribe(data => this.onValueChanged(data));
+      .subscribe({
+        next: data => this.onValueChanged(data),
+        error: errMess => this.errorMessage = <any>errMess
+      });
 
     this.onValueChanged();
   }
@@ -39,9 +44,12 @@ export class DishdetailComponent implements OnInit {
   ngOnInit(): void {
     this.dishService.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
     this.route.params.pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
-      .subscribe(dish => {
-        this.dish = dish;
-        this.setPrevNext(dish.id);
+      .subscribe({
+        next: dish => {
+          this.dish = dish;
+          this.setPrevNext(dish.id);
+        },
+        error: errMess => this.errorMessage = <any>errMess
       });
   }
 
