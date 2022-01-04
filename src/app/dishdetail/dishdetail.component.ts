@@ -15,6 +15,7 @@ export class DishdetailComponent implements OnInit {
 
   dishIds!: string[];
   dish!: Dish;
+  dishcopy!: Dish;
   prev!: string;
   next!: string;
   commentsForm!: FormGroup;
@@ -47,6 +48,7 @@ export class DishdetailComponent implements OnInit {
       .subscribe({
         next: dish => {
           this.dish = dish;
+          this.dishcopy = dish;
           this.setPrevNext(dish.id);
         },
         error: errMess => this.errorMessage = <any>errMess
@@ -85,7 +87,19 @@ export class DishdetailComponent implements OnInit {
   onSubmit() {
     this.comment = this.commentsForm.value;
     this.comment.date = new Date().toISOString();
-    this.dish.comments.push(this.comment);
+    this.dishcopy.comments.push(this.comment);
+    this.dishService.putDish(this.dishcopy)
+      .subscribe({
+        next: dish => {
+          this.dish = dish;
+          this.dishcopy = dish;
+        },
+        error: errMessage => {
+          // this.dish = null;
+          // this.dishcopy = null;
+          this.errorMessage = <any>errMessage;
+        }
+      });
 
     console.log(this.comment);
     //Reset the values once stored into data storage
