@@ -5,6 +5,7 @@ import { Dish } from '../shared/dish';
 import { Promotion } from '../shared/promotion';
 import { LeaderService } from '../services/leader.service';
 import { Leader } from '../shared/leader';
+import { expand, flyInOut } from '../animations/app.animation';
 
 
 
@@ -12,7 +13,8 @@ import { Leader } from '../shared/leader';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  animations: [flyInOut(), expand()]
 })
 export class HomeComponent implements OnInit {
 

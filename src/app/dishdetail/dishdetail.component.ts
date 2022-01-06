@@ -6,10 +6,12 @@ import { Location } from '@angular/common';
 import { switchMap } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Comment } from '../shared/comment'
+import { visibility } from '../animations/app.animation';
 @Component({
   selector: 'app-dishdetail',
   templateUrl: './dishdetail.component.html',
-  styleUrls: ['./dishdetail.component.scss']
+  styleUrls: ['./dishdetail.component.scss'],
+
 })
 export class DishdetailComponent implements OnInit {
 
@@ -21,6 +23,7 @@ export class DishdetailComponent implements OnInit {
   commentsForm!: FormGroup;
   comment!: Comment;
   errorMessage!: string;
+  visibility: string = 'shown'
 
   constructor(private dishService: DishService,
     private route: ActivatedRoute,
@@ -42,14 +45,18 @@ export class DishdetailComponent implements OnInit {
     this.onValueChanged();
   }
   // TODO: How is this inbuilt activated route working with prev and next buttons
-  ngOnInit(): void {
+  ngOnInit() {
     this.dishService.getDishIds().subscribe(dishIds => this.dishIds = dishIds);
-    this.route.params.pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
+    this.route.params.pipe(switchMap((params: Params) => {
+      this.visibility = 'hidden';
+      return this.dishService.getDish(params['id']);
+    }))
       .subscribe({
         next: dish => {
           this.dish = dish;
           this.dishcopy = dish;
           this.setPrevNext(dish.id);
+          this.visibility = 'shown';
         },
         error: errMess => this.errorMessage = <any>errMess
       });

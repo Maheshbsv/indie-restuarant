@@ -1,27 +1,25 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { expand, flyInOut } from '../animations/app.animation';
+import { FeedbackService } from '../services/feedback.service';
 import { Feedback, ContactType } from '../shared/feedback';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+  styleUrls: ['./contact.component.scss'],
+  animations: [flyInOut(), expand()]
 })
 export class ContactComponent implements OnInit {
 
-  @ViewChild('fform') feedbackFormDirective: any;
+  // @ViewChild('fform') feedbackFormDirective: any;
 
   feedbackForm!: FormGroup;
   feedback!: Feedback;
+  feedbackCopy!: Feedback;
   contactType = ContactType;
-
-  constructor(private fb: FormBuilder) {
-    this.createForm();
-  }
-
-  ngOnInit(): void {
-  }
-
+  errorMessage!: string;
+  spinnerVisibility: boolean = false;
   formErrors: any = {
     'firstname': '',
     'lastname': '',
@@ -50,10 +48,19 @@ export class ContactComponent implements OnInit {
     },
   };
 
-  createForm(): void {
+  constructor(private fb: FormBuilder,
+    private feedbackService: FeedbackService,
+    @Inject('BaseURL') public BaseURL: string) {
+    this.createForm();
+  }
+
+  ngOnInit(): void {
+  }
+
+  createForm() {
     this.feedbackForm = this.fb.group({
       firstname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
-      lastname: ['', Validators.required, Validators.minLength(2), Validators.maxLength(25)],
+      lastname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
       telnum: [0, [Validators.required, Validators.pattern]],
       email: ['', [Validators.required, Validators.email]],
       agree: false,
@@ -66,6 +73,7 @@ export class ContactComponent implements OnInit {
 
     this.onValueChanged();
   }
+
 
   onValueChanged(data?: any) {
     if (!this.feedbackForm) { return; }
@@ -88,7 +96,13 @@ export class ContactComponent implements OnInit {
   };
 
   onSubmit() {
-    this.feedback = this.feedbackForm.value;
+    this.spinnerVisibility = true;
+    this.feedbackCopy = this.feedbackForm.value;
+    this.feedbackService.putFeedback(this.feedbackCopy)
+      .subscribe({
+        next: feedback => { this.feedback = feedback; this.spinnerVisibility = false; },
+        error: errMessage => this.errorMessage = errMessage
+      });
     console.log(this.feedback);
     this.feedbackForm.reset({
       firstname: '',
