@@ -35,10 +35,10 @@
       </div>
     </div>
   </div>
-  <div fxFlex fxFlexOffset="20px" class="form-size">
     <h3>Send us your feedback</h3>
 
-    <form novalidate [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+  <div fxFlex fxFlexOffset="20px" class="form-size">
+    <form novalidate [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" [hidden]="feedback || spinnerVisibility" [@expand]>
       <p>
         <mat-form-field class="half-width">
           <input matInput formControlName="firstname" placeholder="First Name" type="text" required>
@@ -102,5 +102,4 @@
   <p>
     <span>Feedback:&nbsp;{{ feedback.message }}</span>
   </p>      
-</div>
 </div>
